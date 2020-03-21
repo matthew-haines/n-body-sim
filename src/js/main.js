@@ -1,4 +1,4 @@
-var camera, controls, scene, renderer;
+var camera, controls, scene, renderer, line;
 
 init();
 animate();
@@ -10,11 +10,6 @@ function init() {
     camera.position.z = 10;
 
     scene = new THREE.Scene();
-
-    var geo = new THREE.SphereGeometry(1, 100, 100);
-    var mat = new THREE.MeshBasicMaterial();
-    var box = new THREE.Mesh(geo, mat);
-    scene.add(box);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -42,4 +37,15 @@ function animate() {
 
 function render() {
     renderer.render( scene, camera );
+}
+
+function makePath( points ) { // points is an array of Vector3
+    var material = new THREE.LineBasicMaterial( { color: 0xffffff } );
+    var geometry = new THREE.BufferGeometry().setFromPoints( points );
+    var line = new THREE.Line( geometry, material );
+    return line;
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
