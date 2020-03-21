@@ -49,3 +49,26 @@ function makePath( points ) { // points is an array of Vector3
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+class SpaceObject {
+    constructor(initial_position, initial_velocity, mass) {
+        this.initial_position = initial_position
+        this.inital_velocity = initial_velocity
+        this.mass = mass
+        this.hasMass = mass ? true : false;
+
+        this.gui = new dat.GUI();
+
+        this.positionFolder = this.gui.addFolder('Position');
+        this.positionFolder.add(this.initial_position, 'x');
+        this.positionFolder.add(this.initial_position, 'y');
+        this.positionFolder.add(this.initial_position, 'z');
+
+        this.velocityFolder = this.gui.addFolder('Velocity');
+        this.velocityFolder.add(this.initial_velocity, 'x');
+        this.velocityFolder.add(this.initial_velocity, 'y');
+        this.velocityFolder.add(this.initial_velocity, 'z');
+
+        this.gui.add(this, 'mass');
+    }
+}
