@@ -85,12 +85,17 @@ class SpaceSimulation {
                 initial_velocity: this.spaceObjectList[key].initial_velocity
             });
         }
-        // do an xmlhttprequest
         console.log("Sending");
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", 'http://localhost:8080')
-        xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xmlhttp.send(JSON.stringify(message));
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", 'http://localhost:8080')
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
+                //handle response data
+                console.log(xhr.responseText);
+            }
+        }
+        xhr.send(JSON.stringify(message));
     }
 }
 
