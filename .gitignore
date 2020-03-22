@@ -3,3 +3,6 @@ node_modules
 __pycache__
 .vscode
 .DS_Store
+input.txt
+output.txt
+sim
