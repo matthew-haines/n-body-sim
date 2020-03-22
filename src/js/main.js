@@ -86,6 +86,11 @@ class SpaceSimulation {
             });
         }
         // do an xmlhttprequest
+        console.log("Sending");
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", 'http://localhost:8080')
+        xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlhttp.send(JSON.stringify(message));
     }
 }
 
