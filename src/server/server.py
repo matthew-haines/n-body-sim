@@ -1,5 +1,7 @@
 import http.server
 import json
+import os
+import numpy as np
 
 def process_and_write(data):
     with open('input.txt', 'w') as f:
@@ -9,6 +11,16 @@ def process_and_write(data):
             f.write('\n')
             f.write(tostr(obj['initial_position']) + tostr(obj['initial_velocity']) + str(obj['mass']))
 
+def read_output():
+    with open('output.txt', 'r') as f:
+        lines = [line.rstrip() for line in f]
+
+    data = np.array([[float(num) for num in line.split()] for line in lines])
+    out_list = []
+    for i in range(int(data.shape[1] / 3)):
+        out_list.append(data[:, 3*i:3*i+3].tolist())
+
+    return out_list
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
 
@@ -30,10 +42,14 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
         content_length=int(self.headers['Content-Length'])
         post_data=self.rfile.read(content_length).decode('utf-8')
         data=json.loads(post_data)
-        print(data)
+        names = [obj['name'] for obj in data['spaceObjects']]
         process_and_write(data)
+        os.system('./sim input.txt output.txt')
+
+        position_list = read_output()
+        response = json.dumps(dict(zip(names, position_list))).encode('utf-8')
+
         self._set_headers()
-        response='Make an actual response instead of this'.encode('utf-8')
         self.wfile.write(response)
 
 

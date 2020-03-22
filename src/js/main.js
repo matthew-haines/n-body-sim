@@ -58,12 +58,16 @@ class SpaceSimulation {
         this.spaceObjectList = {};
         this.timesteps = 1000;
         this.deltaT = 1.0;
+        this.playbackSpeed = 100.0;
+        this.results =  null;
 
         this.gui = new dat.GUI();
         this.gui.add(this, 'timesteps');
         this.gui.add(this, 'deltaT');
+        this.gui.add(this, 'playbackSpeed');
         this.gui.add(this, 'addObject');
-        this.gui.add(this, 'run');
+        this.gui.add(this, 'calculate');
+        this.gui.add(this, 'play');
     }
     
     addObject() {
@@ -71,7 +75,7 @@ class SpaceSimulation {
         if (name) this.spaceObjectList[name] = new SpaceObject(name);
     }
 
-    run() {
+    calculate() {
         var message = {
             timesteps: this.timesteps,
             deltaT: this.deltaT,
@@ -91,11 +95,30 @@ class SpaceSimulation {
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.onreadystatechange = function() {
             if (xhr.readyState == XMLHttpRequest.DONE) {
-                //handle response data
-                console.log(xhr.responseText);
+                objects.results = JSON.parse(xhr.responseText);
+                console.log("Recieved");
+
             }
         }
         xhr.send(JSON.stringify(message));
+    }
+
+    play() {
+        this._play();
+    }
+
+    async _play() {
+        console.log("Playing");
+        for (var key in this.spaceObjectList) {
+            this.spaceObjectList[key].update();
+        }
+        var steps = Math.floor(this.results[Object.keys(this.results)[0]].length / this.playbackSpeed);
+        for (var i = 0; i < steps; i++) {
+            for (var key in objects.results) {
+                objects.spaceObjectList[key].sphere.position.set(...objects.results[key][i * objects.playbackSpeed]);
+            }
+            await sleep(10);
+        }
     }
 }
 

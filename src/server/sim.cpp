@@ -64,13 +64,12 @@ int main(int argc, char* argv[]) {
     double px, py, pz, vx, vy, vz, m;
     while (inFile >> px >> py >> pz >> vx >> vy >> vz >> m) {
         bodies.push_back(Body(px, py, pz, vx, vy, vz, m));
-        cout << px << py << pz << vx << vy << vz << m << endl;
     }
     inFile.close();
 
-    ofstream file;
-    file.open("output.txt");
-    eulerSolver(bodies, timesteps, dt, &file);
-    file.close();
+    ofstream outfile;
+    outfile.open(argv[2]);
+    eulerSolver(bodies, timesteps, dt, &outfile);
+    outfile.close();
     return 0;
 }
